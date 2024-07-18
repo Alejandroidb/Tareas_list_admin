@@ -1,13 +1,14 @@
 import React from "react";
+import { NavLink } from "react-router-dom";
 
 const Navbar = () => {
   return (
     <>
-      <nav className="navbar navbar-expand-lg bg-success">
+      <nav className="navbar navbar-expand-lg bg-primary">
         <div className="container-fluid">
-          <a className="navbar-brand text-light" href="#">
+          <NavLink className="navbar-brand text-light" to='/'>
             TareaAdmin
-          </a>
+          </NavLink>
           <button
             className="navbar-toggler"
             type="button"
@@ -21,50 +22,27 @@ const Navbar = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarSupportedContent">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <a className="nav-link active" aria-current="page" href="#">
-                  Home
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Link
-                </a>
-              </li>
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
+            <li className="nav-item">
+                <NavLink
+                  className="nav-link active text-light"
+                  aria-current="page"
+                 to='/Curriculum'
                 >
-                  Dropdown
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Action
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Another action
-                    </a>
-                  </li>
-                  <li>
-                    <hr className="dropdown-divider" />
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Something else here
-                    </a>
-                  </li>
-                </ul>
+                  Cv
+                </NavLink>
               </li>
               <li className="nav-item">
-                <a className="nav-link disabled" aria-disabled="true">
-                  Disabled
+                <a
+                  className="nav-link active text-light"
+                  aria-current="page"
+                  href="#"
+                >
+                  Tareas
+                </a>
+              </li>
+              <li className="nav-item">
+                <a className="nav-link text-light" href="#">
+                  Tareas Realizadas
                 </a>
               </li>
             </ul>
@@ -81,7 +59,10 @@ const Navbar = () => {
                 placeholder="Ingrese su contraseña"
                 aria-label="contraseña"
               />
-              <button className="btn btn-outline-success" type="submit">
+              <button
+                className="btn btn-outline-success bg-success text-light"
+                type="submit"
+              >
                 Ingresar
               </button>
             </form>
