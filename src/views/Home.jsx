@@ -1,6 +1,18 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 
 const Home = () => {
+
+useEffect(()=>{
+  const traer = async () => {
+    const response = await fetch('https://codigo-alfa.cl/bootcamp-socius2024/Api/ping')
+    const data = await response.json()
+    console.log(data)
+  }
+
+traer()
+},[])
+
+
   return (
     <>
     <h1 className='text-center mt-1'>Bienvenido a TareasAdmin!</h1>
