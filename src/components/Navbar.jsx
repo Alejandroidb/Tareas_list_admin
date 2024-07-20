@@ -25,9 +25,10 @@ const Navbar = () => {
       const data = await response.json();
 
       if (data.success) {
-        navigate("/Curriculum")
-        setEmail('');
-        setPassword('')
+        localStorage.setItem("authToken", data.token);
+        setEmail("");
+        setPassword("");
+        navigate("/Curriculum");
       } else {
         alert("Correo o contraseña incorrectos");
       }
@@ -66,18 +67,18 @@ const Navbar = () => {
                 </NavLink>
               </li>
               <li className="nav-item">
-                <a
+                <NavLink
                   className="nav-link active text-light"
                   aria-current="page"
-                  href="#"
+                  to="/Tasks"
                 >
                   Tareas
-                </a>
+                </NavLink>
               </li>
               <li className="nav-item">
-                <a className="nav-link text-light" href="#">
+                <NavLink className="nav-link text-light" to="/DoneTasks">
                   Tareas Realizadas
-                </a>
+                </NavLink>
               </li>
             </ul>
             <form className="d-flex" role="search" onSubmit={loguear}>
