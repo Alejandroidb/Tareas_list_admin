@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
+
 const Navbar = () => {
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
 
   const loguear = async (e) => {
@@ -14,19 +15,20 @@ const Navbar = () => {
         "https://codigo-alfa.cl/bootcamp-socius2024/Api/loginUser",
         {
           method: "POST",
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ user, password }),
         }
       );
-
       if (!response.ok) {
         throw new Error("Error en la solicitud");
       }
 
       const data = await response.json();
+      console.log(data)
 
       if (data.success) {
-        localStorage.setItem("authToken", data.token);
-        setEmail("");
+        localStorage.setItem('authToken', data.jwt);
+
+        setUser("");
         setPassword("");
         navigate("/Curriculum");
       } else {
@@ -37,6 +39,7 @@ const Navbar = () => {
       alert("Hubo un problema con la autenticación");
     }
   };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-primary">
@@ -84,11 +87,11 @@ const Navbar = () => {
             <form className="d-flex" role="search" onSubmit={loguear}>
               <input
                 className="form-control me-2"
-                type="email"
+                type="user"
                 placeholder="Ingrese su correo"
-                aria-label="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                aria-label="user"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
                 required
               />
               <input

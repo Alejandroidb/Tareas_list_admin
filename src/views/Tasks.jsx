@@ -6,7 +6,7 @@ const Tasks = () => {
   useEffect(() => {
     const listaTareas = async () => {
       const token = localStorage.getItem("authToken");
-      console.log(token)
+
 
       try {
         const response = await fetch(
@@ -14,9 +14,8 @@ const Tasks = () => {
           {
             method: "POST",
             headers: {
-                "Content-Type": "application/json", // Agrega el encabezado de Content-Type
-                "Authorization": `Bearer ${token}`
-              },
+              "Content-Type": "application/json",
+            },
             body: JSON.stringify({ token }),
           }
           
@@ -26,7 +25,6 @@ const Tasks = () => {
         }
         const data = await response.json();
         console.log(data);
-        setTareas(data.getTareas || [])
         
       } catch (error) {
         console.error("Error:", error);
@@ -43,9 +41,9 @@ const Tasks = () => {
         <h2>Lista de Tareas</h2>
         <ul>
           {tareas.map((tarea) => (
-            <li key={tarea.id}> {/* Cambia task a tarea */}
-              <h3>{tarea.titulo}</h3> {/* Cambia task a tarea */}
-              <p>{tarea.descripcion}</p> {/* Cambia task a tarea */}
+            <li key={tarea.id}>
+              <h3>{tarea.titulo}</h3>
+              <p>{tarea.descripcion}</p>
             </li>
           ))}
         </ul>
