@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 
-
-const Navbar = () => {
+const Navbar = ({setToken}) => {
   const navigate = useNavigate();
   const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
@@ -15,6 +14,9 @@ const Navbar = () => {
         "https://codigo-alfa.cl/bootcamp-socius2024/Api/loginUser",
         {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
           body: JSON.stringify({ user, password }),
         }
       );
@@ -23,11 +25,11 @@ const Navbar = () => {
       }
 
       const data = await response.json();
-      console.log(data)
+      console.log(data);
 
       if (data.success) {
-        localStorage.setItem('authToken', data.jwt);
-
+        localStorage.setItem("authToken", data.jwt);
+        setToken(data.jwt)
         setUser("");
         setPassword("");
         navigate("/Curriculum");
