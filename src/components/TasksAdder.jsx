@@ -1,43 +1,86 @@
-import React from "react";
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
+import Tasks from "../components/Tasks";
+import TasksAdder from "../components/TasksAdder";
 
-const TasksAdder = ({ agregarTarea }) => {
-  const [tituloTarea, setTituloTarea] = useState("");
-  const [descripcionTarea, setDescripcionTarea] = useState("");
+const TaskManager = () => {
+  const [tareas, setTareas] = useState([]);
+  const token = localStorage.getItem("token");
 
-  const manejarTareas = async (e) => {
-    e.preventDefault();
-    await agregarTarea(tituloTarea, descripcionTarea);
-    setTituloTarea("");
-    setDescripcionTarea("");
+  useEffect(() => {
+    // const storedToken = localStorage.getItem("token");
+    if (token) {
+      fetchTareas(token);
+    }
+  }, [token]);
+
+  const fetchTareas = async (token) => {
+    try {
+      const response = await fetch(
+        "https://codigo-alfa.cl/bootcamp-socius2024/Api/listTareasUsuario",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Error al cargar las tareas");
+      }
+      const data = await response.json();
+      setTareas(data.getTareas || []);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al cargar las tareas");
+    }
+  };
+
+  const agregarTarea = async (tituloTarea, descripcionTarea, token) => {
+    // const token = localStorage.getItem("token");
+    if (!token) {
+      alert("No se encontró el token de autenticación");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "https://codigo-alfa.cl/bootcamp-socius2024/Api/insertarTarea",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            TituloTarea: tituloTarea,
+            DescripcionTarea: descripcionTarea,
+            token: token,
+          }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Error al agregar la tarea");
+      }
+
+      const data = await response.json();
+      if (data.success) {
+        alert("Tarea agregada exitosamente");
+
+        fetchTareas(token);
+      } else {
+        alert("Error al agregar la tarea");
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    }
   };
 
   return (
     <div className="container-fluid">
-      <h2>Agregar Tarea</h2>
-      <form onSubmit={manejarTareas} className="form-control me-2">
-        <input
-          type="text"
-          placeholder="Título de la tarea"
-          value={tituloTarea}
-          onChange={(e) => setTituloTarea(e.target.value)}
-          required
-        />
-        <input
-          placeholder="Descripción de la tarea"
-          value={descripcionTarea}
-          onChange={(e) => setDescripcionTarea(e.target.value)}
-          required
-        ></input>
-        <button
-          className="btn btn-info bg-info-subtle text-center ms-2"
-          type="submit"
-        >
-          Agregar Tarea
-        </button>
-      </form>
+      <TasksAdder agregarTarea={agregarTarea} />
+      <Tasks tareas={tareas} />
     </div>
   );
 };
 
-export default TasksAdder;
+export default TaskManager;

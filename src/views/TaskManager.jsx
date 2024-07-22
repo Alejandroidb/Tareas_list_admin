@@ -2,44 +2,44 @@ import React, { useState, useEffect } from "react";
 import Tasks from "../components/Tasks";
 import TasksAdder from "../components/TasksAdder";
 
-const TaskManager = ({token}) => {
+const TaskManager = () => {
   const [tareas, setTareas] = useState([]);
+  const token = localStorage.getItem("token");
 
   useEffect(() => {
-    const traerTareas = async () => {
-    //   const token = localStorage.getItem("authToken");
-
-      try {
-        const response = await fetch(
-          "https://codigo-alfa.cl/bootcamp-socius2024/Api/listTareasUsuario",
-          {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-            body: JSON.stringify({ token }),
-          }
-        );
-        if (!response.ok) {
-          throw new Error("Error al cargar las tareas");
-        }
-        const data = await response.json();
-        setTareas(data.getTareas || []);
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Error al cargar las tareas");
-      }
-    };
-if (token){
-    traerTareas();}
+    // const storedToken = localStorage.getItem("token");
+    if (token) {
+      fetchTareas(token);
+    }
   }, [token]);
 
-  const agregarTarea = async (tituloTarea, descripcionTarea) => {
-    const token = localStorage.getItem("authToken");
+  const fetchTareas = async (token) => {
+    try {
+      const response = await fetch(
+        "https://codigo-alfa.cl/bootcamp-socius2024/Api/listTareasUsuario",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ token }),
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Error al cargar las tareas");
+      }
+      const data = await response.json();
+      setTareas(data.getTareas || []);
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error al cargar las tareas");
+    }
+  };
 
+  const agregarTarea = async (tituloTarea, descripcionTarea, token) => {
+    // const token = localStorage.getItem("token");
     if (!token) {
-      alert("No se encoentró el token de autenticación");
+      alert("No se encontró el token de autenticación");
       return;
     }
 
@@ -50,9 +50,12 @@ if (token){
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ tituloTarea, descripcionTarea }),
+          body: JSON.stringify({
+            TituloTarea: tituloTarea,
+            DescripcionTarea: descripcionTarea,
+            token: token,
+          }),
         }
       );
       if (!response.ok) {
@@ -63,18 +66,7 @@ if (token){
       if (data.success) {
         alert("Tarea agregada exitosamente");
 
-        setTareas((prevTareas) => [
-          ...prevTareas,
-          {
-            TituloTarea: tituloTarea,
-            DescripcionTarea: descripcionTarea,
-            FechaIngreso: new Date().toISOString(),
-            FechaTermino: "0000-00-00 00:00:00",
-            ComentarioFinal: "",
-            RandomTarea: data.randomTarea, // Asume que este valor se devuelve del backend
-            EstadoTarea: "Tarea activa",
-          },
-        ]);
+        fetchTareas(token);
       } else {
         alert("Error al agregar la tarea");
       }
