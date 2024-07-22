@@ -5,26 +5,27 @@ import { jwtDecode } from 'jwt-decode' // import dependency
 
 const Navbar = () => {
   const [decodedToken, setDecodedToken] = useState(null);
-
-
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
+
   const loguear = async (e) => {
     e.preventDefault();
+
     try {
       const response = await fetch(
         "https://codigo-alfa.cl/bootcamp-socius2024/Api/loginUser",
         {
           method: "POST",
-          body: JSON.stringify({ 'user':email, 'password':password }),
+          body: JSON.stringify({ 'user':user, 'password':password }),
         }
       );
-
       if (!response.ok) {
         throw new Error("Error en la solicitud");
       }
+
       const data = await response.json();
+      console.log(data);
 
       if (data.success) {
         console.log(data)
@@ -35,7 +36,7 @@ const Navbar = () => {
             console.log('Decodificado:', decoded.data.token);
             localStorage.setItem("token", decoded.data.token);
             setDecodedToken(decoded.data.token);
-            setEmail("");
+            setUser("");
             setPassword("");
             navigate("/Curriculum");
           } catch (error) {
@@ -43,8 +44,9 @@ const Navbar = () => {
           }
         }
 
-        return 0;
-        localStorage.setItem("authToken", data.token);
+        // return 0;
+        // localStorage.setItem("authToken", data.token);
+        
       } else {
         alert("Correo o contraseña incorrectos");
       }
@@ -53,6 +55,7 @@ const Navbar = () => {
       alert("Hubo un problema con la autenticación");
     }
   };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-primary">
@@ -100,11 +103,11 @@ const Navbar = () => {
             <form className="d-flex" role="search" onSubmit={loguear}>
               <input
                 className="form-control me-2"
-                type="email"
+                type="user"
                 placeholder="Ingrese su correo"
-                aria-label="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                aria-label="user"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
                 required
               />
               <input
@@ -129,4 +132,5 @@ const Navbar = () => {
     </>
   );
 };
+
 export default Navbar;
