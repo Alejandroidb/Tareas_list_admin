@@ -7,7 +7,7 @@ const Home = () => {
         "https://codigo-alfa.cl/bootcamp-socius2024/Api/ping"
       );
       const data = await response.json();
-      console.log(data);
+      // console.log(data);
     };
 
     traer();

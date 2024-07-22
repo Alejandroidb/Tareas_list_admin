@@ -3,12 +3,16 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { jwtDecode } from 'jwt-decode' // import dependency
 
 
+<<<<<<< HEAD
 const Navbar = () => {
   const [decodedToken, setDecodedToken] = useState(null);
   
 
+=======
+const Navbar = ({setToken}) => {
+>>>>>>> e6deae8c8faccdaeff4d0f8835f0397eb7e6b782
   const navigate = useNavigate();
-  const [email, setEmail] = useState("");
+  const [user, setUser] = useState("");
   const [password, setPassword] = useState("");
 
   const loguear = async (e) => {
@@ -19,17 +23,25 @@ const Navbar = () => {
         "https://codigo-alfa.cl/bootcamp-socius2024/Api/loginUser",
         {
           method: "POST",
+<<<<<<< HEAD
           body: JSON.stringify({ 'user':email, 'password':password }),
+=======
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ user, password }),
+>>>>>>> e6deae8c8faccdaeff4d0f8835f0397eb7e6b782
         }
       );
-
       if (!response.ok) {
         throw new Error("Error en la solicitud");
       }
 
       const data = await response.json();
+      console.log(data);
 
       if (data.success) {
+<<<<<<< HEAD
         console.log(data)
         const token = data.jwt; 
         if (token) {
@@ -49,6 +61,13 @@ const Navbar = () => {
         return 0;
         localStorage.setItem("authToken", data.token);
         
+=======
+        localStorage.setItem("authToken", data.jwt);
+        setToken(data.jwt)
+        setUser("");
+        setPassword("");
+        navigate("/Curriculum");
+>>>>>>> e6deae8c8faccdaeff4d0f8835f0397eb7e6b782
       } else {
         alert("Correo o contraseña incorrectos");
       }
@@ -57,6 +76,7 @@ const Navbar = () => {
       alert("Hubo un problema con la autenticación");
     }
   };
+
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-primary">
@@ -104,11 +124,11 @@ const Navbar = () => {
             <form className="d-flex" role="search" onSubmit={loguear}>
               <input
                 className="form-control me-2"
-                type="email"
+                type="user"
                 placeholder="Ingrese su correo"
-                aria-label="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                aria-label="user"
+                value={user}
+                onChange={(e) => setUser(e.target.value)}
                 required
               />
               <input
