@@ -35,7 +35,12 @@ const Navbar = () => {
         if (token) {
           try {
             const decoded = jwtDecode(token);
-            setDecodedToken(decoded);
+            console.log('Decodificado:', decoded.data.token);
+            localStorage.setItem("token", decoded.data.token);
+            setDecodedToken(decoded.data.token);
+            setEmail("");
+            setPassword("");
+            navigate("/Curriculum");
           } catch (error) {
             console.error('Error al decodificar el token', error);
           }
@@ -43,9 +48,7 @@ const Navbar = () => {
 
         return 0;
         localStorage.setItem("authToken", data.token);
-        setEmail("");
-        setPassword("");
-        navigate("/Curriculum");
+        
       } else {
         alert("Correo o contraseña incorrectos");
       }
