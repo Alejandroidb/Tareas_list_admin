@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
+import { jwtDecode } from 'jwt-decode' // import dependency
+
 
 const Navbar = () => {
+  const [decodedToken, setDecodedToken] = useState(null);
+  
+
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -14,7 +19,7 @@ const Navbar = () => {
         "https://codigo-alfa.cl/bootcamp-socius2024/Api/loginUser",
         {
           method: "POST",
-          body: JSON.stringify({ email, password }),
+          body: JSON.stringify({ 'user':email, 'password':password }),
         }
       );
 
@@ -25,6 +30,18 @@ const Navbar = () => {
       const data = await response.json();
 
       if (data.success) {
+        console.log(data)
+        const token = data.jwt; 
+        if (token) {
+          try {
+            const decoded = jwtDecode(token);
+            setDecodedToken(decoded);
+          } catch (error) {
+            console.error('Error al decodificar el token', error);
+          }
+        }
+
+        return 0;
         localStorage.setItem("authToken", data.token);
         setEmail("");
         setPassword("");
